@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Analytics - HealthCompanion{% endblock %}
+
+{% block styles %}
+<style>
+    .chart-container {
+        position: relative;
+        height: 250px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .analytics-card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .analytics-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header.gradient-primary {
+        background: linear-gradient(45deg, #4d52f7, #9c27b0);
+        color: white;
+        border-top-left-radius: 0.5rem !important;
+        border-top-right-radius: 0.5rem !important;
+    }
+    
+    .health-score-container {
+        position: relative;
+        height: 200px;
+    }
+    
+    .score-display {
+        position: relative;
+    }
+    
+    .correlation-item {
+        transition: all 0.3s ease;
+    }
+    
+    .correlation-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .predictions-list .prediction-item {
+        transition: all 0.3s ease;
+    }
+    
+    .predictions-list .prediction-item:hover {
+        background-color: rgba(0, 0, 0, 0.01);
+    }
+    
+    .animated-pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(77, 82, 247, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(77, 82, 247, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(77, 82, 247, 0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-0 display-6">Health Analytics Dashboard</h1>
+            <p class="lead text-muted">Advanced insights from your health data</p>
+        </div>
+    </div>
+    
+    <!-- Health Score and Summary -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card analytics-card h-100">
+                <div class="card-header gradient-primary">
+                    <h5 class="mb-0">Health Score</h5>
+                </div>
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <div id="health-score-gauge" class="health-score-container w-100">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card analytics-card h-100">
+                <div class="card-header gradient-primary">
+                    <h5 class="mb-0">AI-Powered Predictions</h5>
+                </div>
+                <div class="card-body">
+                    <div id="health-predictions-container">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Analyzing your health patterns...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trends and Analytics -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="card analytics-card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Health Trends Overview</h5>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Weekly</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary active">Monthly</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Yearly</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" id="health-overview-chart">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Severity Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" id="severity-distribution-chart">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Symptom Timeline and Emotional Analysis -->
+    <div class="row mb-4">
+        <div class="col-md-7 mb-4 mb-md-0">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Symptom Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" id="symptom-timeline">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-5">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Emotional Well-being Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" id="sentiment-analysis-chart">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Vitals and Correlations -->
+    <div class="row">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="card analytics-card h-100">
+                <div class="card-header d-flex align-items-center">
+                    <h5 class="mb-0">Vital Signs</h5>
+                    <span class="badge bg-success ms-2 animated-pulse">Live Data</span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" id="vital-trends-chart">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <small class="text-muted">Connected with your health devices</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card analytics-card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Health Correlations</h5>
+                </div>
+                <div class="card-body">
+                    <div id="health-correlations">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Analyzing correlations in your health data...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i> 
+                        Correlations are based on your health logs and interaction patterns
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/health-analytics.js') }}"></script>
+{% endblock %}

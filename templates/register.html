@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - HealthCompanion{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0">Create an Account</h3>
+        </div>
+        <div class="card-body">
+          <form method="POST" action="{{ url_for('register') }}" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="row g-3">
+              <!-- Account Details -->
+              <div class="col-12">
+                <h5 class="border-bottom pb-2 mb-3">Account Information</h5>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="username">Username</label>
+                {{ form.username(class="form-control", placeholder="Choose a username") }}
+                {% if form.username.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.username.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6">
+                <label for="email">Email Address</label>
+                {{ form.email(class="form-control", placeholder="Enter your email") }}
+                {% if form.email.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.email.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6">
+                <label for="password">Password</label>
+                {{ form.password(class="form-control", placeholder="Create a password (min. 8 characters)") }}
+                {% if form.password.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.password.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6">
+                <label for="confirm_password">Confirm Password</label>
+                {{ form.confirm_password(class="form-control", placeholder="Confirm your password") }}
+                {% if form.confirm_password.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.confirm_password.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <!-- Personal Information (Optional) -->
+              <div class="col-12 mt-4">
+                <h5 class="border-bottom pb-2 mb-3">Personal Information (Optional)</h5>
+                <p class="text-muted small mb-3">This information helps us provide more personalized health insights</p>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="first_name">First Name</label>
+                {{ form.first_name(class="form-control", placeholder="Enter your first name") }}
+                {% if form.first_name.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.first_name.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6">
+                <label for="last_name">Last Name</label>
+                {{ form.last_name(class="form-control", placeholder="Enter your last name") }}
+                {% if form.last_name.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.last_name.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6">
+                <label for="date_of_birth">Date of Birth</label>
+                {{ form.date_of_birth(class="form-control", type="date") }}
+                {% if form.date_of_birth.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.date_of_birth.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6">
+                <label for="gender">Gender</label>
+                {{ form.gender(class="form-control") }}
+                {% if form.gender.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.gender.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-12 mt-4">
+                <div class="d-grid">
+                  {{ form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          <p class="mb-0">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Important Health Disclaimer -->
+<div class="container mt-5">
+  <div class="card bg-dark-lighter border-warning">
+    <div class="card-body p-3">
+      <div class="d-flex align-items-start">
+        <i class="bi bi-exclamation-triangle-fill text-warning me-3 mt-1" style="font-size: 1.3rem;"></i>
+        <div>
+          <h5 class="card-title">Health Information Privacy Notice</h5>
+          <p class="card-text text-muted">
+            The information you provide to HealthCompanion is used to offer personalized health insights. 
+            We maintain strict confidentiality of your data and do not share it with third parties.
+            This application provides informational resources only and is not a substitute for professional medical care.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

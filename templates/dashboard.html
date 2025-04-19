@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - HealthCompanion{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <div class="sidebar d-none d-lg-flex flex-column">
+    <div class="sidebar-header">
+      <h4 class="mb-3">Your Conversations</h4>
+      <button id="new-session-btn" class="btn btn-primary w-100">
+        <i class="bi bi-plus-lg"></i> New Conversation
+      </button>
+    </div>
+    
+    <div class="sidebar-content">
+      {% if user_sessions %}
+        {% for session in user_sessions %}
+          <div class="session-item {% if session.id == session.id %}active{% endif %}" data-session-id="{{ session.id }}">
+            <div class="session-title">{{ session.title }}</div>
+            <div class="session-actions">
+              <button class="btn btn-sm btn-link rename-session-btn" data-bs-toggle="tooltip" title="Rename">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-link delete-session-btn" data-bs-toggle="tooltip" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center p-4">
+          <p class="text-muted">No conversations yet</p>
+        </div>
+      {% endif %}
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="text-muted small">Powered by</span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="text-primary fw-bold mr-1">Groq</span>
+        <i class="bi bi-lightning-fill text-warning ml-1"></i>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Mobile sidebar toggle -->
+    <div class="d-lg-none p-2 border-bottom">
+      <button id="sidebar-toggle" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-list"></i> Conversations
+      </button>
+      <span class="ms-2 fw-bold" id="current-session-title">{{ session.title }}</span>
+    </div>
+    
+    <!-- Chat Container -->
+    <div class="chat-container">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="message {% if message.is_user %}user-message{% else %}ai-message{% endif %}">
+            <div class="message-avatar">
+              <i class="bi {% if message.is_user %}bi-person-fill{% else %}bi-robot{% endif %}"></i>
+            </div>
+            <div class="message-content">
+              {% if message.message_type == 'text' %}
+                <p class="message-text">{{ message.content }}</p>
+              {% elif message.message_type == 'image' %}
+                <p class="message-text">{{ message.content }}</p>
+                <div class="image-message">
+                  <img src="/images/{{ message.image_path.split('/')[-1] }}" alt="Uploaded image">
+                </div>
+              {% elif message.message_type == 'voice' %}
+                <p class="message-text">{{ message.content }}</p>
+                <audio controls src="/images/{{ message.audio_path.split('/')[-1] }}" class="mt-2 w-100"></audio>
+              {% endif %}
+              
+              <div class="message-time">
+                {% if not message.is_user and message.severity_level > 0 %}
+                  <span class="severity-indicator 
+                    {% if message.severity_level >= 3 %}severity-high
+                    {% elif message.severity_level >= 2 %}severity-medium
+                    {% else %}severity-low{% endif %}">
+                  </span>
+                {% endif %}
+                {{ message.created_at.strftime('%I:%M %p | %b %d') }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-4 text-primary"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <h3 class="mb-3">Welcome to HealthCompanion</h3>
+          <p class="text-muted mb-4">Ask me about any health concerns you have. I can help with:</p>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="card h-100 bg-dark-lightest">
+                <div class="card-body text-center">
+                  <i class="bi bi-chat-dots text-primary" style="font-size: 1.5rem;"></i>
+                  <h5 class="mt-2">Health Questions</h5>
+                  <p class="text-muted small">Get insights about symptoms and wellness topics</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 bg-dark-lightest">
+                <div class="card-body text-center">
+                  <i class="bi bi-camera text-primary" style="font-size: 1.5rem;"></i>
+                  <h5 class="mt-2">Image Analysis</h5>
+                  <p class="text-muted small">Upload images of visible symptoms like rashes</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 bg-dark-lightest">
+                <div class="card-body text-center">
+                  <i class="bi bi-mic text-primary" style="font-size: 1.5rem;"></i>
+                  <h5 class="mt-2">Voice Input</h5>
+                  <p class="text-muted small">Speak your health concerns naturally</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+      <form id="chat-form">
+        <div class="chat-input-wrapper">
+          <input id="chat-input" type="text" class="chat-input" placeholder="Type your health question here...">
+          <div class="chat-actions">
+            <button type="button" id="image-upload-btn" class="chat-action-btn" data-bs-toggle="tooltip" title="Upload Image">
+              <i class="bi bi-image"></i>
+            </button>
+            <button type="button" id="start-recording" class="chat-action-btn" data-bs-toggle="tooltip" title="Voice Input">
+              <i class="bi bi-mic"></i>
+            </button>
+            <button type="button" id="stop-recording" class="chat-action-btn" style="display: none;">
+              <i class="bi bi-stop-fill"></i>
+            </button>
+            <button type="submit" class="chat-action-btn" data-bs-toggle="tooltip" title="Send">
+              <i class="bi bi-send"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+      
+      <!-- Recording indicator -->
+      <div id="recording-indicator" class="recording-indicator mt-2" style="display: none;">
+        <div class="pulse-dot"></div>
+        <span>Recording...</span>
+        <div class="ms-auto">
+          <button id="cancel-recording" class="btn btn-sm btn-link text-danger">Cancel</button>
+        </div>
+      </div>
+      
+      <!-- Health disclaimer -->
+      <div class="mt-3">
+        <p class="text-muted small mb-0">
+          <i class="bi bi-info-circle"></i> HealthCompanion provides general health information only and is not a substitute for professional medical advice.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file input for image upload -->
+<input type="file" id="image-file-input" accept="image/*" style="display: none;">
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/voice-input.js') }}"></script>
+<script src="{{ url_for('static', filename='js/image-upload.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,390 @@
+/* Enhanced Dark theme styles with better contrast and animations */
+:root {
+  --bg-dark: #121212;
+  --bg-dark-lighter: #1e1e1e;
+  --bg-dark-lightest: #2d2d2d;
+  --text-light: #ffffff; /* Increased brightness for better visibility */
+  --text-muted: #b0b0b0; /* Brightened muted text */
+  --border-dark: #3a3a3a; /* Slightly brighter border */
+  
+  /* Enhanced primary colors for better visibility */
+  --primary-enhanced: #5d62ff;
+  --primary-glow: rgba(93, 98, 255, 0.5);
+  
+  /* Animation variables */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* Background animation */
+.bg-animated {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-animated::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, 
+    rgba(93, 98, 255, 0.03) 0%,
+    rgba(30, 30, 30, 0) 30%,
+    rgba(20, 20, 20, 0) 100%);
+  animation: rotate 60s linear infinite;
+}
+
+.bg-animated::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, 
+    rgba(23, 162, 184, 0.03) 0%,
+    rgba(30, 30, 30, 0) 40%,
+    rgba(20, 20, 20, 0) 100%);
+  animation: rotate 120s linear infinite reverse;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Floating particles effect */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(93, 98, 255, 0.15);
+  pointer-events: none;
+  animation: float 15s infinite ease-in-out;
+}
+
+.particle:nth-child(2n) {
+  width: 8px;
+  height: 8px;
+  background-color: rgba(23, 162, 184, 0.15);
+  animation-duration: 25s;
+}
+
+.particle:nth-child(3n) {
+  width: 4px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  animation-duration: 20s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-30px) translateX(15px);
+  }
+  50% {
+    transform: translateY(-15px) translateX(30px);
+  }
+  75% {
+    transform: translateY(-25px) translateX(-15px);
+  }
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  transition: background-color var(--transition-normal);
+}
+
+.navbar {
+  background-color: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--border-dark);
+  transition: all var(--transition-normal);
+}
+
+.card {
+  background-color: var(--bg-dark-lighter);
+  border-color: var(--border-dark);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-header, .card-footer {
+  background-color: var(--bg-dark-lightest);
+  border-color: var(--border-dark);
+}
+
+.form-control {
+  background-color: var(--bg-dark-lighter);
+  border-color: var(--border-dark);
+  color: var(--text-light);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus {
+  border-color: var(--primary-enhanced);
+  box-shadow: 0 0 0 0.2rem var(--primary-glow);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.btn {
+  transition: all var(--transition-fast);
+}
+
+.btn-primary {
+  background-color: var(--primary-enhanced);
+  border-color: var(--primary-enhanced);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(93, 98, 255, 0.3);
+}
+
+.modal-content {
+  background-color: var(--bg-dark-lighter);
+  border-color: var(--border-dark);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header, .modal-footer {
+  border-color: var(--border-dark);
+}
+
+.table {
+  color: var(--text-light);
+}
+
+.table thead th {
+  border-bottom-color: var(--border-dark);
+}
+
+.table td, .table th {
+  border-top-color: var(--border-dark);
+}
+
+.dropdown-menu {
+  background-color: var(--bg-dark-lighter);
+  border-color: var(--border-dark);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  color: var(--text-light);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: var(--bg-dark-lightest);
+  color: var(--primary-enhanced);
+}
+
+.dropdown-divider {
+  border-top-color: var(--border-dark);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--bg-dark-lighter) inset !important;
+  -webkit-text-fill-color: var(--text-light) !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-dark-lightest);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-dark);
+}
+
+/* Enhanced dark theme specific styles for health companion */
+.sidebar {
+  background-color: rgba(30, 30, 30, 0.95);
+  border-color: var(--border-dark);
+  backdrop-filter: blur(10px);
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header, .sidebar-footer {
+  border-color: var(--border-dark);
+}
+
+.chat-input-container {
+  background-color: rgba(30, 30, 30, 0.95);
+  border-color: var(--border-dark);
+  backdrop-filter: blur(10px);
+}
+
+.chat-input-wrapper {
+  background-color: var(--bg-dark-lightest);
+  transition: box-shadow var(--transition-fast);
+}
+
+.chat-input-wrapper:focus-within {
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.chat-input {
+  color: var(--text-light);
+}
+
+.message {
+  transition: transform var(--transition-normal);
+  animation: message-appear 0.3s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes message-appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-content {
+  background-color: var(--bg-dark-lightest);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition-fast);
+}
+
+.message-content:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.user-message .message-content {
+  background-color: var(--primary-dark);
+  color: white;
+  animation: user-message-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes user-message-glow {
+  from {
+    box-shadow: 0 0 5px rgba(93, 98, 255, 0.2);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(93, 98, 255, 0.4);
+  }
+}
+
+.ai-message .message-content {
+  background-color: var(--bg-dark-lightest);
+  color: var(--text-light);
+  animation: ai-message-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes ai-message-glow {
+  from {
+    box-shadow: 0 0 5px rgba(23, 162, 184, 0.2);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(23, 162, 184, 0.4);
+  }
+}
+
+/* Enhanced text styles for better visibility */
+.text-muted {
+  color: #b0b0b0 !important; /* Brighter muted text for better visibility */
+  opacity: 0.95;
+}
+
+.card-text.text-muted {
+  color: #c0c0c0 !important; /* Even brighter for card text */
+}
+
+/* Enhanced severity indicators */
+.severity-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+.severity-low {
+  background-color: var(--success);
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.severity-medium {
+  background-color: var(--warning);
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.severity-high {
+  background-color: var(--danger);
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+  animation: pulse-urgent 1s infinite;
+}
+
+@keyframes pulse-urgent {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Enhanced health journal items */
+.log-item {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.log-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.log-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary-enhanced), var(--primary-dark));
+}

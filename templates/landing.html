@@ -1,0 +1,917 @@
+{% extends 'base.html' %}
+
+{% block title %}HealthCompanion - AI-Powered Health Assistant{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Enhanced hero section styling */
+  .landing-hero {
+    background: linear-gradient(135deg, var(--bg-dark-lighter) 0%, var(--bg-dark) 100%);
+    padding: 8rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .landing-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(93, 98, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 60%, rgba(23, 162, 184, 0.08) 0%, transparent 50%);
+    z-index: 0;
+  }
+  
+  .landing-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    animation: fadeInUp 1s ease-out;
+  }
+  
+  .landing-hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    letter-spacing: -0.5px;
+  }
+  
+  .landing-hero-title span {
+    color: var(--primary-enhanced);
+    position: relative;
+    display: inline-block;
+  }
+  
+  .landing-hero-title span::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, rgba(93, 98, 255, 0.3) 0%, rgba(93, 98, 255, 0.1) 100%);
+    z-index: -1;
+    border-radius: 4px;
+  }
+  
+  .landing-hero-subtitle {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    color: #ffffff;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .hero-btn {
+    transform: translateY(0);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hero-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(93, 98, 255, 0.3);
+  }
+  
+  .hero-highlight {
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+    color: var(--primary-enhanced);
+  }
+  
+  .hero-badge {
+    position: absolute;
+    top: -10px;
+    right: -40px;
+    background: rgba(23, 162, 184, 0.1);
+    border: 1px solid rgba(23, 162, 184, 0.3);
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: #17a2b8;
+    animation: pulse 2s infinite;
+  }
+  
+  /* Floating animation elements */
+  .float-element {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg, rgba(93, 98, 255, 0.1), rgba(23, 162, 184, 0.1));
+    z-index: 0;
+    animation: float 15s infinite ease-in-out;
+  }
+  
+  .float-1 {
+    width: 150px;
+    height: 150px;
+    top: 20%;
+    right: 15%;
+    animation-delay: 0s;
+  }
+  
+  .float-2 {
+    width: 100px;
+    height: 100px;
+    bottom: 25%;
+    left: 10%;
+    animation-delay: 2s;
+  }
+  
+  .float-3 {
+    width: 80px;
+    height: 80px;
+    top: 15%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="landing-hero">
+  <!-- Floating elements for visual interest -->
+  <div class="float-element float-1"></div>
+  <div class="float-element float-2"></div>
+  <div class="float-element float-3"></div>
+  
+  <div class="container">
+    <div class="landing-hero-content">
+      <h1 class="landing-hero-title">
+        Your Personal <span class="text-primary">AI Health</span> Companion
+      </h1>
+      <p class="landing-hero-subtitle">
+        Get instant health insights, track symptoms, and receive 
+        <span class="hero-highlight">personalized recommendations
+        </span> 
+        with ultra-fast AI technology.
+      </p>
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg hero-btn">
+            <i class="bi bi-chat-text-fill"></i> Open Dashboard
+          </a>
+        {% else %}
+          <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg hero-btn">
+            <i class="bi bi-person-plus"></i> Get Started
+          </a>
+          <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg hero-btn">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="feature-section py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="mb-3" style="color: #ffffff; font-weight: 700;">Multimodal Health Support</h2>
+      <p class="text-light" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+        Interact naturally through text, voice, or images for comprehensive health assistance
+      </p>
+    </div>
+    
+    <style>
+      .feature-card {
+        background: rgba(30, 30, 30, 0.6);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+      }
+      
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+      
+      .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-enhanced), var(--primary-dark));
+      }
+      
+      .feature-icon {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, rgba(93, 98, 255, 0.15) 0%, rgba(93, 98, 255, 0.05) 100%);
+        border-radius: 20px;
+        font-size: 2.5rem;
+        color: var(--primary-enhanced);
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      
+      .feature-card:hover .feature-icon {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(93, 98, 255, 0.3);
+      }
+      
+      .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #ffffff;
+      }
+      
+      .feature-description {
+        color: var(--text-light);
+        line-height: 1.6;
+      }
+      
+      .feature-card:nth-child(1) .feature-icon {
+        background: linear-gradient(135deg, rgba(93, 98, 255, 0.15) 0%, rgba(93, 98, 255, 0.05) 100%);
+      }
+      
+      .feature-card:nth-child(2) .feature-icon {
+        background: linear-gradient(135deg, rgba(23, 162, 184, 0.15) 0%, rgba(23, 162, 184, 0.05) 100%);
+        color: #17a2b8;
+      }
+      
+      .feature-card:nth-child(3) .feature-icon {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(40, 167, 69, 0.05) 100%);
+        color: #28a745;
+      }
+      
+      .feature-card:nth-child(2)::before {
+        background: linear-gradient(90deg, #17a2b8, #138496);
+      }
+      
+      .feature-card:nth-child(3)::before {
+        background: linear-gradient(90deg, #28a745, #218838);
+      }
+    </style>
+    
+    <div class="row g-4">
+      <!-- Feature 1 -->
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-chat-square-text"></i>
+          </div>
+          <h3 class="feature-title">Text Chat</h3>
+          <p class="feature-description">
+            Describe your symptoms in detail through our intuitive chat interface for instant health insights powered by Groq's fast AI inference.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Feature 2 -->
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-mic"></i>
+          </div>
+          <h3 class="feature-title">Voice Input</h3>
+          <p class="feature-description">
+            Speak naturally about your health concerns for a hands-free experience with advanced voice recognition and medical terminology processing.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Feature 3 -->
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="bi bi-camera"></i>
+          </div>
+          <h3 class="feature-title">Image Analysis</h3>
+          <p class="feature-description">
+            Upload images of visible symptoms like rashes, eye conditions, or injuries for visual assessment using Gemini's advanced vision capabilities.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="py-5 bg-dark-lighter">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="mb-2">How HealthCompanion Helps You</h2>
+      <p class="text-muted">Powered by Groq's ultra-fast inference engine for immediate health guidance</p>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title d-flex align-items-center mb-3">
+              <i class="bi bi-lightning-charge-fill text-primary me-2"></i>
+              Real-Time Insights
+            </h3>
+            <p class="card-text">
+              Get instant first-level diagnostic suggestions and wellness advice without the long waits. 
+              Groq's tensor streaming processor delivers responses with near-zero latency.
+            </p>
+            <ul class="list-unstyled">
+              <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Instant symptom analysis</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Evidence-based recommendations</li>
+              <li><i class="bi bi-check-circle-fill text-success me-2"></i> Emergency severity detection</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title d-flex align-items-center mb-3">
+              <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+              Personal Health Journal
+            </h3>
+            <p class="card-text">
+              Track your symptoms over time, identify patterns, and receive trend analysis powered by advanced AI. 
+              Your personal health data organized and analyzed intelligently.
+            </p>
+            <ul class="list-unstyled">
+              <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Symptom tracking and history</li>
+              <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Visual health trend analysis</li>
+              <li><i class="bi bi-check-circle-fill text-success me-2"></i> Daily health summaries</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Use Cases Section -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="mb-3" style="color: #ffffff; font-weight: 700;">Who Benefits</h2>
+      <p class="text-light" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+        HealthCompanion serves diverse health needs across different user groups
+      </p>
+      
+      <!-- Technical Architecture Section -->
+      <div class="tech-architecture mt-5 p-4 bg-dark-lighter rounded">
+        <h3 class="text-primary mb-4">Technical Architecture</h3>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="feature-card h-100">
+              <h4 class="text-primary">Groq Integration</h4>
+              <ul class="text-light text-start">
+                <li>Real-time inference with LLaMA 3 8B model</li>
+                <li>Sub-100ms response times</li>
+                <li>Parallel request processing</li>
+                <li>Automatic prompt optimization</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card h-100">
+              <h4 class="text-primary">Security Features</h4>
+              <ul class="text-light text-start">
+                <li>End-to-end encryption</li>
+                <li>Secure data storage</li>
+                <li>Role-based access control</li>
+                <li>Regular security audits</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card h-100">
+              <h4 class="text-primary">Real-time Processing</h4>
+              <ul class="text-light text-start">
+                <li>WebSocket-based live updates</li>
+                <li>Async task processing</li>
+                <li>Smart request batching</li>
+                <li>Optimized response streaming</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card h-100">
+              <h4 class="text-primary">Scalability</h4>
+              <ul class="text-light text-start">
+                <li>Horizontal scaling support</li>
+                <li>Load balancing</li>
+                <li>Caching optimization</li>
+                <li>Resource auto-scaling</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <style>
+      .user-card {
+        background: rgba(30, 30, 30, 0.6);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+      }
+      
+      .user-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+      
+      .user-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-enhanced), transparent);
+      }
+      
+      .user-card:nth-child(2)::after {
+        background: linear-gradient(90deg, #17a2b8, transparent);
+      }
+      
+      .user-card:nth-child(3)::after {
+        background: linear-gradient(90deg, #28a745, transparent);
+      }
+      
+      .user-card:nth-child(4)::after {
+        background: linear-gradient(90deg, #ffc107, transparent);
+      }
+      
+      .user-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+        color: var(--primary-enhanced);
+        background: rgba(93, 98, 255, 0.1);
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+      
+      .user-card:hover .user-icon {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(93, 98, 255, 0.3);
+      }
+      
+      .user-card:nth-child(2) .user-icon {
+        color: #17a2b8;
+        background: rgba(23, 162, 184, 0.1);
+      }
+      
+      .user-card:nth-child(3) .user-icon {
+        color: #28a745;
+        background: rgba(40, 167, 69, 0.1);
+      }
+      
+      .user-card:nth-child(4) .user-icon {
+        color: #ffc107;
+        background: rgba(255, 193, 7, 0.1);
+      }
+      
+      .user-card:hover:nth-child(2) .user-icon {
+        box-shadow: 0 0 20px rgba(23, 162, 184, 0.3);
+      }
+      
+      .user-card:hover:nth-child(3) .user-icon {
+        box-shadow: 0 0 20px rgba(40, 167, 69, 0.3);
+      }
+      
+      .user-card:hover:nth-child(4) .user-icon {
+        box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+      }
+      
+      .user-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #ffffff;
+      }
+      
+      .user-description {
+        color: var(--text-light);
+        line-height: 1.6;
+      }
+    </style>
+    
+    <div class="row g-4">
+      <!-- Use Case 1 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="user-card text-center">
+          <div class="user-icon">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <h4 class="user-title">Parents</h4>
+          <p class="user-description">
+            Quickly check symptoms for kids and get reliable information on common childhood health concerns.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Use Case 2 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="user-card text-center">
+          <div class="user-icon">
+            <i class="bi bi-house-fill"></i>
+          </div>
+          <h4 class="user-title">Rural Users</h4>
+          <p class="user-description">
+            Access basic healthcare information instantly when in-person medical resources are limited.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Use Case 3 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="user-card text-center">
+          <div class="user-icon">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <h4 class="user-title">Elderly Users</h4>
+          <p class="user-description">
+            Benefit from voice interaction for easier use without typing, with clear, simple health explanations.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Use Case 4 -->
+      <div class="col-lg-3 col-md-6">
+        <div class="user-card text-center">
+          <div class="user-icon">
+            <i class="bi bi-image-fill"></i>
+          </div>
+          <h4 class="user-title">Visual Symptoms</h4>
+          <p class="user-description">
+            Upload images of skin conditions, rashes, or other visible symptoms for AI-powered visual analysis.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technology Section -->
+<section class="py-5 bg-dark-lighter">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="mb-3" style="color: #ffffff; font-weight: 700;">Powered by Advanced AI</h2>
+      <p class="text-light" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+        State-of-the-art technology for reliable health assistance
+      </p>
+    </div>
+    
+    <style>
+      .tech-section {
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .tech-card {
+        background: rgba(25, 25, 25, 0.7);
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        position: relative;
+        height: 100%;
+      }
+      
+      .tech-list {
+        position: relative;
+        z-index: 2;
+      }
+      
+      .tech-item {
+        padding: 1.2rem 0;
+        transition: transform 0.3s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      
+      .tech-item:last-child {
+        border-bottom: none;
+      }
+      
+      .tech-item:hover {
+        transform: translateX(10px);
+      }
+      
+      .tech-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, rgba(93, 98, 255, 0.15) 0%, rgba(93, 98, 255, 0.05) 100%);
+        border-radius: 12px;
+        font-size: 1.5rem;
+        color: var(--primary-enhanced);
+        margin-right: 1.5rem;
+        transition: all 0.3s ease;
+      }
+      
+      .tech-item:hover .tech-icon {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(93, 98, 255, 0.2);
+      }
+      
+      .tech-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+      }
+      
+      .tech-description {
+        color: var(--text-light);
+        line-height: 1.6;
+      }
+      
+      .tech-image-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .tech-image {
+        position: relative;
+        z-index: 2;
+        filter: drop-shadow(0 10px 20px rgba(93, 98, 255, 0.3));
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      .tech-glow {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(93, 98, 255, 0.2) 0%, rgba(93, 98, 255, 0) 70%);
+        border-radius: 50%;
+        z-index: 1;
+        animation: pulse 4s ease-in-out infinite alternate;
+      }
+      
+      @keyframes tech-pulse {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(1.2);
+          opacity: 0.2;
+        }
+      }
+    </style>
+    
+    <div class="row align-items-center tech-section">
+      <div class="mx-auto">
+        <div class="tech-card border-white">
+          <h3 style="color: #ffffff; font-weight: 700; margin-bottom: 2rem;">Groq Integration</h3>
+          <ul class="list-unstyled tech-list">
+            <li class="tech-item d-flex align-items-start">
+              <div class="tech-icon">
+                <i class="bi bi-cpu-fill"></i>
+              </div>
+              <div>
+                <h5 class="tech-title">Tensor Streaming Processor (TSP)</h5>
+                <p class="tech-description">
+                  Ultra-fast inference of large language models for immediate response to your health queries.
+                </p>
+              </div>
+            </li>
+            <li class="tech-item d-flex align-items-start">
+              <div class="tech-icon">
+                <i class="bi bi-speedometer2"></i>
+              </div>
+              <div>
+                <h5 class="tech-title">Deterministic, Low-latency Responses</h5>
+                <p class="tech-description">
+                  Consistent performance with predictable response times when health insights are needed quickly.
+                </p>
+              </div>
+            </li>
+            <li class="tech-item d-flex align-items-start">
+              <div class="tech-icon">
+                <i class="bi bi-gear-fill"></i>
+              </div>
+              <div>
+                <h5 class="tech-title">Efficient Resource Utilization</h5>
+                <p class="tech-description">
+                  Optimized processing across AI pipelines for text, voice, and image analysis for streamlined health insights.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section> <!--class="py - 5"-->
+  <div class="container">
+    <style>
+      /* .cta-card {
+        background: linear-gradient(135deg, #4d52f7 0%, #3941d5 100%);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        border: none;
+        box-shadow: 0 15px 35px rgba(77, 82, 247, 0.3);
+        backdrop-filter: blur(10px);
+      }
+      
+      .cta-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+        linear-gradient(135deg, rgba(93, 98, 255, 0.9) 0%, rgba(57, 65, 213, 0.9) 100%);
+        background-size: 40px 40px, 100% 100%;
+        opacity: 0.8;
+        z-index: 0;
+      }
+      
+      .cta-content {
+        position: relative;
+        z-index: 1;
+        padding: 4rem 2rem;
+      }
+      
+      .cta-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      
+      .cta-text {
+        font-size: 1.2rem;
+        margin-bottom: 2.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .cta-btn {
+        background-color: white;
+        color: var(--primary-enhanced);
+        font-weight: 600;
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      
+      .cta-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        background-color: transparent;
+        color: white;
+        border-color: white;
+      }
+      
+      .cta-shapes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        z-index: 0;
+      }
+      
+      .cta-shape {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        animation: float 15s infinite ease-in-out;
+      }
+      
+      .cta-shape-1 {
+        width: 150px;
+        height: 150px;
+        top: -50px;
+        right: 10%;
+        animation-delay: 0s;
+      }
+      
+      .cta-shape-2 {
+        width: 80px;
+        height: 80px;
+        bottom: 20px;
+        left: 10%;
+        animation-delay: 2s;
+      }
+       */
+      .disclaimer-card {
+        background: rgba(25, 25, 25, 0.8);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .disclaimer-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #ffc107, rgba(255, 193, 7, 0.3));
+      }
+      
+      .disclaimer-title {
+        color: white;
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+      }
+      
+      .disclaimer-text {
+        color: var(--text-light);
+        line-height: 1.7;
+      }
+      
+      .disclaimer-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 193, 7, 0.1);
+        border-radius: 50%;
+        font-size: 2rem;
+        color: #ffc107;
+        margin-right: 1.5rem;
+        flex-shrink: 0;
+      }
+    </style>
+  </div>
+</section>
+
+<!-- Disclaimer Section -->
+<section class="py-4">
+  <div class="container">
+    <div class="disclaimer-card">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-start">
+          <div class="disclaimer-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <div>
+            <h4 class="disclaimer-title">Important Health Disclaimer</h4>
+            <p class="disclaimer-text">
+              HealthCompanion is designed to provide general health information and guidance only. 
+              It is not a substitute for professional medical advice, diagnosis, or treatment. 
+              Always seek the advice of your physician or other qualified health provider with any 
+              questions you may have regarding a medical condition.
+            </p>
+            <p class="disclaimer-text mb-0">
+              In case of emergency, please dial your local emergency number immediately.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

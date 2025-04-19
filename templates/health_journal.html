@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Journal - HealthCompanion{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Your Health Journal</h2>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#logFormCollapse">
+          <i class="bi bi-plus-lg"></i> Log New Symptom
+        </button>
+      </div>
+
+      <!-- Symptom Log Form -->
+      <div class="collapse mb-4" id="logFormCollapse">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="mb-0">Log a Symptom</h4>
+          </div>
+          <div class="card-body">
+            <form id="health-journal-form" method="POST" action="{{ url_for('health_journal') }}">
+              {{ form.hidden_tag() }}
+
+              <div class="mb-3">
+                <label for="symptom">Symptom</label>
+                {{ form.symptom(class="form-control", placeholder="e.g., Headache, Cough, Rash") }}
+                {% if form.symptom.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.symptom.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                <label for="severity">Severity (1-10)</label>
+                <div class="d-flex align-items-center">
+                  {{ form.severity(class="form-range", type="range", min="1", max="10", step="1") }}
+                  <span id="severity-value" class="ms-3 fw-bold">5</span>
+                </div>
+                {% if form.severity.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.severity.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                <label for="description">Description</label>
+                {{ form.description(class="form-control", rows="3", placeholder="Describe your symptoms in detail...") }}
+                {% if form.description.errors %}
+                  <div class="invalid-feedback d-block">
+                    {% for error in form.description.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="d-flex justify-content-end">
+                {{ form.submit(class="btn btn-primary") }}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Smart Analysis Section -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Smart Health Analysis</h4>
+          <button class="btn btn-primary btn-sm" onclick="performSmartAnalysis()">
+            <i class="bi bi-magic"></i> Analyze Patterns
+          </button>
+        </div>
+        <div class="card-body">
+          <div id="smart-analysis">
+            <!-- Analysis content will be inserted here -->
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Health Trends Chart -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Health Trends</h4>
+        </div>
+        <div class="card-body">
+          <div style="height: 300px;">
+            <canvas id="health-trends-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Symptom Analytics -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-header">
+              <h4 class="mb-0">Most Frequent Symptoms</h4>
+            </div>
+            <div class="card-body">
+              <div style="height: 200px;">
+                <canvas id="symptom-frequency-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-header">
+              <h4 class="mb-0">Severity Distribution</h4>
+            </div>
+            <div class="card-body">
+              <div style="height: 200px;">
+                <canvas id="severity-distribution-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Health Logs -->
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">Symptom History</h4>
+        </div>
+        <div class="card-body">
+          <div id="health-logs">
+            {% if logs %}
+              {% for log in logs %}
+                <div class="log-item" data-log-id="{{ log.id }}">
+                  <div class="symptom-header">
+                    <h3 class="symptom-name">{{ log.symptom }}</h3>
+                    <div class="symptom-severity">
+                      <span class="severity-badge 
+                        {% if log.severity >= 8 %}high
+                        {% elif log.severity >= 4 %}medium
+                        {% else %}low{% endif %}">
+                        Severity: {{ log.severity }}/10
+                      </span>
+                    </div>
+                  </div>
+                  <div class="symptom-date">{{ log.recorded_at.strftime('%I:%M %p | %b %d, %Y') }}</div>
+                  <p class="symptom-description">{{ log.description or 'No description provided.' }}</p>
+                  <div class="log-actions">
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-log-btn">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="text-center p-5">
+                <div class="mb-3">
+                  <i class="bi bi-journal-medical text-muted" style="font-size: 3rem;"></i>
+                </div>
+                <h4>No symptoms logged yet</h4>
+                <p class="text-muted">Start tracking your symptoms by clicking "Log New Symptom" above</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Prepare data for charts -->
+<script>
+  // Helper to create data for symptom frequency chart
+  document.addEventListener('DOMContentLoaded', function() {
+    const logItems = document.querySelectorAll('.log-item');
+    if (!logItems.length) return;
+
+    // Collect data for severity distribution
+    const sevDistribution = [0, 0, 0]; // Low, Medium, High
+
+    logItems.forEach(item => {
+      const severity = parseInt(item.querySelector('.severity-badge').textContent.match(/\d+/)[0]);
+
+      if (severity >= 8) {
+        sevDistribution[2]++; // High
+      } else if (severity >= 4) {
+        sevDistribution[1]++; // Medium
+      } else {
+        sevDistribution[0]++; // Low
+      }
+    });
+
+    // Set data for severity distribution chart
+    window.severityDistributionData = sevDistribution;
+
+    // Create symptom frequency data
+    const symptoms = {};
+    logItems.forEach(item => {
+      const symptom = item.querySelector('.symptom-name').textContent;
+      symptoms[symptom] = (symptoms[symptom] || 0) + 1;
+    });
+
+    // Sort symptoms by frequency
+    const sortedSymptoms = Object.entries(symptoms)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5); // Get top 5
+
+    window.symptomFrequencyData = {
+      symptoms: sortedSymptoms.map(s => s[0]),
+      frequencies: sortedSymptoms.map(s => s[1])
+    };
+  });
+</script>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/health-journal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

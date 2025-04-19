@@ -1,0 +1,76 @@
+2025-04-19 16:18:19,469 INFO: Application startup
+2025-04-19 16:18:20,062 INFO: Application initialized successfully on server 45d4d094-107a-42fd-8cb1-9e8368aafc9a
+2025-04-19 16:19:57,209 ERROR: Exception on /api/health [GET]
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/routes.py", line 853, in admin_dashboard
+    if not current_user.is_authenticated or current_user.email != os.environ.get(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 1116, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/state.py", line 803, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 1670, in load_scalar_attributes
+    result = load_on_ident(
+             ^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 509, in load_on_ident
+    return load_on_pk_identity(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 694, in load_on_pk_identity
+    session.execute(
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2241, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2110, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 103, in _go
+    self._raise_for_prerequisite_state(fn.__name__, current_state)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 973, in _raise_for_prerequisite_state
+    raise sa_exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (sqlite3.OperationalError) attempt to write a readonly database
+[SQL: INSERT INTO audit_logs (event_type, user_id, ip_address, endpoint, method, status_code, details, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('request_start', 1, '10.84.2.157', 'admin_dashboard', 'GET', 200, '{}', '2025-04-19 16:19:57.207973')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8) (Background on this error at: https://sqlalche.me/e/20/7s2a)
+2025-04-19 16:19:57,213 ERROR: Server Error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-04-19 16:25:19,312 INFO: Application startup
+2025-04-19 16:25:19,942 INFO: Application initialized successfully on server 87452201-9aef-489b-a163-cd94a34b6478
+2025-04-19 16:25:20,564 INFO: Application startup
+2025-04-19 16:25:21,048 INFO: Application initialized successfully on server 68cf1f5a-6e78-46fc-90ef-3e92e41eb07c
+2025-04-19 16:25:39,359 INFO: Application startup
+2025-04-19 16:25:40,163 INFO: Application initialized successfully on server 17050ec1-496d-4559-8434-05e270184a53
+2025-04-19 16:25:52,615 INFO: Application startup
+2025-04-19 16:25:53,161 INFO: Application initialized successfully on server 7804f7d3-8e10-49dd-97c3-f256503085e0
+2025-04-19 16:25:53,787 INFO: Application startup
+2025-04-19 16:25:54,406 INFO: Application initialized successfully on server 788f3f07-1e94-426b-85aa-e3467ca66b43
+2025-04-19 16:26:23,796 INFO: Application startup
+2025-04-19 16:26:24,557 INFO: Application initialized successfully on server 6c637aec-0791-40d1-92d0-602066663169
+2025-04-19 16:26:38,372 INFO: Application startup
+2025-04-19 16:26:39,159 INFO: Application initialized successfully on server 38727bf1-09f1-4be6-bec2-a26a24c7e915
+2025-04-19 16:26:40,058 INFO: Application startup
+2025-04-19 16:26:40,684 INFO: Application initialized successfully on server 631b5c04-338e-467e-8ecc-c53388ef15ec

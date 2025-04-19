@@ -1,0 +1,25 @@
+
+Date: 2024-04-15
+Symptom: Headache
+Severity: 7
+Description: Intense throbbing pain in the front of my head, started after working long hours on computer
+
+Date: 2024-04-16
+Symptom: Fatigue
+Severity: 5
+Description: Feeling unusually tired throughout the day, even after 8 hours of sleep
+
+Date: 2024-04-17
+Symptom: Cough
+Severity: 4
+Description: Dry cough, especially noticeable in the morning and at night
+
+Date: 2024-04-18
+Symptom: Joint Pain
+Severity: 6
+Description: Dull aching in knee joints, worse after physical activity
+
+Date: 2024-04-19
+Symptom: Nausea
+Severity: 3
+Description: Mild nausea in the morning, subsides after eating breakfast
