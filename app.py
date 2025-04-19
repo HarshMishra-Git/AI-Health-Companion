@@ -106,3 +106,5 @@ with app.app_context():
 
     # Store initial metrics
     load_balancer.record_metrics(SERVER_ID)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=3000, debug=False)
