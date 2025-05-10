@@ -24,6 +24,20 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// Universal formatter for both Markdown bold and heading bolding
+function formatMessageText(text) {
+  if (!text) return '';
+
+  // Convert **bold** to <strong>
+  let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  // Bold headings like "1. Something:"
+  formatted = formatted.replace(/^(\d+\.\s[^:]+):/gm, '<b>$1:</b>');
+
+  return formatted;
+}
+
+
 // Function to handle image upload via file input
 function handleImageUpload(event) {
   const file = event.target.files[0];
@@ -145,6 +159,12 @@ function uploadImage(file) {
   });
 }
 
+// Helper function to bold headings (before ":")
+function boldHeadings(text) {
+  return text.replace(/^(\d+\.\s[^:]+):/gm, '<b>$1:</b>');
+}
+
+
 // Function to update chat with image and AI response
 function updateChatWithImage(data) {
   const chatContainer = document.querySelector('.chat-container');
@@ -165,8 +185,6 @@ function updateChatWithImage(data) {
       <div class="message-time">${formatDateTime(data.user_message.created_at)}</div>
     </div>
   `;
-
-  // Append user message to chat
   chatContainer.appendChild(userMessage);
 
   // Create AI response element
@@ -183,8 +201,13 @@ function updateChatWithImage(data) {
 
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
+
+    // Process text to bold headings
+    const processedContent = formatMessageText(data.ai_message.content);
+
+
     messageContent.innerHTML = `
-      <p class="message-text">${data.ai_message.content}</p>
+      <p class="message-text">${processedContent}</p>
       <div class="message-time">${severityIndicator}${formatDateTime(data.ai_message.created_at)}</div>
     `;
 
@@ -196,13 +219,13 @@ function updateChatWithImage(data) {
     aiMessage.appendChild(messageContent);
     addReadAloudButton(messageContent, data.ai_message.content);
 
-    // Append AI message to chat
     chatContainer.appendChild(aiMessage);
   }
 
   // Scroll to bottom
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
+
 
 function handleImageUpload(event) {
   const file = event.target.files[0];

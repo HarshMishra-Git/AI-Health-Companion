@@ -88,13 +88,19 @@ function sendChatMessage(message) {
   });
 }
 
-// Function to format text with proper styling (bold, etc.)
+// Universal formatter for both Markdown bold and heading bolding
 function formatMessageText(text) {
   if (!text) return '';
 
-  // Replace **text** with <strong>text</strong> for proper bold formatting
-  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Convert **bold** to <strong>
+  let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  // Bold headings like "1. Something:"
+  formatted = formatted.replace(/^(\d+\.\s[^:]+):/gm, '<b>$1:</b>');
+
+  return formatted;
 }
+
 
 // Function to add Read Aloud button to AI messages
 function addReadAloudButton(container, text) {

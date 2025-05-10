@@ -41,6 +41,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+function formatMessageText(text) {
+  if (!text) return '';
+
+  // Convert **bold** to <strong>
+  let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+  // Bold headings like "1. Something:"
+  formatted = formatted.replace(/^(\d+\.\s[^:]+):/gm, '<b>$1:</b>');
+
+  return formatted;
+}
+
+
 // Function to start voice recording
 async function startRecording() {
   try {
@@ -228,7 +241,7 @@ function updateChatWithVoiceMessage(data) {
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
     messageContent.innerHTML = `
-      <p class="message-text">${data.ai_message.content}</p>
+      <p class="message-text">${formatMessageText(data.ai_message.content)}</p>
       <div class="message-time">${severityIndicator}${formatDateTime(data.ai_message.created_at)}</div>
     `;
 
