@@ -207,7 +207,7 @@ function initSeveritySlider() {
   }
 }
 
-// Smart analysis functions
+// Smart analysis function with clean markdown rendering
 async function performSmartAnalysis() {
   fetch('/api/health/smart-analysis', {
     method: 'POST',
@@ -219,35 +219,35 @@ async function performSmartAnalysis() {
   .then(data => {
     const analysisDiv = document.getElementById('smart-analysis');
     if (data.success && data.analysis) {
-      let html = '';
+      let fullReport = '';
 
-      // Display Patterns
+      // Build markdown report
       if (data.analysis.patterns && data.analysis.patterns.length > 0) {
-        html += '<h5>Identified Patterns:</h5><ul>';
+        fullReport += '## Identified Patterns\n\n';
         data.analysis.patterns.forEach(pattern => {
-          html += `<li><strong>${pattern.symptom}</strong>: ${pattern.description}</li>`;
+          fullReport += `- **${pattern.symptom}**: ${pattern.description}\n`;
         });
-        html += '</ul>';
+        fullReport += '\n';
       }
 
-      // Display Correlations
       if (data.analysis.correlations && data.analysis.correlations.length > 0) {
-        html += '<h5>Symptom Correlations:</h5><ul>';
+        fullReport += '## Symptom Correlations\n\n';
         data.analysis.correlations.forEach(correlation => {
-          html += `<li>${correlation}</li>`;
+          fullReport += `- ${correlation}\n`;
         });
-        html += '</ul>';
+        fullReport += '\n';
       }
 
-      // Display Recommendations
       if (data.analysis.recommendations && data.analysis.recommendations.length > 0) {
-        html += '<h5>Recommendations:</h5><ul>';
+        fullReport += '## Recommendations\n\n';
         data.analysis.recommendations.forEach(rec => {
-          html += `<li>${rec}</li>`;
+          fullReport += `- ${rec}\n`;
         });
-        html += '</ul>';
+        fullReport += '\n';
       }
 
+      // Convert markdown → HTML
+      const html = marked.parse(fullReport);
       analysisDiv.innerHTML = html || 'No patterns found in the analysis.';
     } else {
       analysisDiv.innerHTML = 'Analysis not available. Please try again.';
@@ -258,6 +258,7 @@ async function performSmartAnalysis() {
     document.getElementById('smart-analysis').innerHTML = 'Error performing analysis.';
   });
 }
+
 
 async function generateHealthReport() {
     try {
